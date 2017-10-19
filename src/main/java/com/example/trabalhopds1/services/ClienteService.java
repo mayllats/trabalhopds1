@@ -17,6 +17,7 @@ import com.example.trabalhopds1.dto.ClienteDTO;
 import com.example.trabalhopds1.dto.ClienteNewDTO;
 import com.example.trabalhopds1.repositories.CidadeRepository;
 import com.example.trabalhopds1.repositories.ClienteRepository;
+import com.example.trabalhopds1.repositories.EnderecoRepository;
 import com.example.trabalhopds1.services.exceptions.DataIntegrityException;
 import com.example.trabalhopds1.services.exceptions.ObjectNotFoundException;
 
@@ -29,6 +30,9 @@ public class ClienteService {
 	@Autowired
 	private CidadeRepository cidadeRepository;
 	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 	public Cliente find(Integer id) {
 		Cliente obj = repo.findOne(id);
 		if(obj == null) {
@@ -39,7 +43,9 @@ public class ClienteService {
 	
 	public Cliente insert(Cliente obj) {
 		obj.setId(null);
-		return repo.save(obj);
+		obj = repo.save(obj);
+		enderecoRepository.save(obj.getEnderecos());
+		return obj;
 	}
 	
 	public Cliente update(Cliente obj) {
@@ -53,7 +59,7 @@ public class ClienteService {
 		repo.delete(id);
 		}
 		catch(DataIntegrityViolationException e) {
-			throw new DataIntegrityException("Não é possível excluir porque há entidades relacionadas");
+			throw new DataIntegrityException("Não é possível excluir porque há pedidos relacionadas");
 		}
 	}
 	

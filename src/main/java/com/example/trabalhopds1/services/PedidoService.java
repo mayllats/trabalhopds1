@@ -33,7 +33,6 @@ public class PedidoService {
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
 	
-	
 	public Pedido find(Integer id) {
 		Pedido obj = repo.findOne(id);
 		if(obj == null) {
@@ -41,7 +40,6 @@ public class PedidoService {
 		}
 		return obj;
 	}
-	
 	
 	public Pedido insert(Pedido obj) {
 		obj.setId(null);

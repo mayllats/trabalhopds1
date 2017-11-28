@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.trabalhopds1.domain.Categoria;
 import com.example.trabalhopds1.domain.Produto;
+import com.example.trabalhopds1.dto.ProdutoDTO;
 import com.example.trabalhopds1.repositories.CategoriaRepository;
 import com.example.trabalhopds1.repositories.ProdutoRepository;
 import com.example.trabalhopds1.services.exceptions.ObjectNotFoundException;
@@ -31,9 +32,18 @@ public class ProdutoService {
 		return obj;
 	}
 	
+	public Produto insert(Produto obj) {
+		obj.setId(null);
+		return repo.save(obj);
+	}
+	
 	public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		List<Categoria> categorias = categoriaRepository.findAll(ids);
 		return repo.findDistinctByNomeContainingAndCategoriasIn(nome, categorias, pageRequest);
+	}
+	
+	public Produto fromDTO(ProdutoDTO objDto) {
+		return new Produto(objDto.getId(), objDto.getNome(),objDto.getPreco());
 	}
 }

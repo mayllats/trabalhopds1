@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.example.trabalhopds1.domain.Categoria;
 import com.example.trabalhopds1.domain.Produto;
+import com.example.trabalhopds1.dto.CategoriaDTO;
 import com.example.trabalhopds1.dto.ProdutoDTO;
 import com.example.trabalhopds1.resources.utils.URL;
+import com.example.trabalhopds1.services.CategoriaService;
 import com.example.trabalhopds1.services.ProdutoService;
 
 @RestController
@@ -28,6 +31,9 @@ public class ProdutoResource {
 	
 	@Autowired
 	private ProdutoService service;
+	
+	@Autowired
+	private CategoriaService categoriaService;
 
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
 	public ResponseEntity<Produto> find(@PathVariable Integer id) {
@@ -46,6 +52,22 @@ public class ProdutoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	@RequestMapping(value="/{id}/categoria", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id){
+		Categoria categoria = categoriaService.fromDTO(objDto);
+		Produto produto = service.find(id);
+		produto.addCategoria(categoria);
+		service.update(produto);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@RequestMapping(value="/{id}/preco/{valor}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@Valid @PathVariable Integer id, @PathVariable Double valor){
+		Produto produto = service.find(id);
+		produto.setPreco(valor);
+		service.update(produto);
+		return ResponseEntity.noContent().build();
+	}
 	
 	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<Page<ProdutoDTO>> findPage(

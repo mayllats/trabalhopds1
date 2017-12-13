@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.example.trabalhopds1.domain.Categoria;
+import com.example.trabalhopds1.domain.Cliente;
 import com.example.trabalhopds1.domain.Produto;
 import com.example.trabalhopds1.dto.ProdutoDTO;
 import com.example.trabalhopds1.repositories.CategoriaRepository;
@@ -37,6 +38,12 @@ public class ProdutoService {
 		return repo.save(obj);
 	}
 	
+	public Produto update(Produto obj) {
+		Produto newObj = find(obj.getId());
+		updateData(newObj, obj);
+		return repo.save(newObj);
+	}
+	
 	public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String orderBy, String direction){
 		PageRequest pageRequest = new PageRequest(page, linesPerPage, Direction.valueOf(direction), orderBy);
 		List<Categoria> categorias = categoriaRepository.findAll(ids);
@@ -45,5 +52,11 @@ public class ProdutoService {
 	
 	public Produto fromDTO(ProdutoDTO objDto) {
 		return new Produto(objDto.getId(), objDto.getNome(),objDto.getPreco(),objDto.getCategoriaId());
+	}
+	
+	private void updateData(Produto newObj, Produto obj) {
+		newObj.setNome(obj.getNome());
+		newObj.setPreco(obj.getPreco());
+		newObj.setCategorias(obj.getCategorias());
 	}
 }

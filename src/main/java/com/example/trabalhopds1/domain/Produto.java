@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.example.trabalhopds1.resources.exception.ProductContainsCategoryException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -101,6 +102,13 @@ public class Produto implements Serializable {
 		this.itens = itens;
 	}
 	
+	public List<Categoria> addCategoria(Categoria categoria){
+		if(this.categorias.contains(categoria)) {
+			throw new ProductContainsCategoryException();
+		}
+		this.categorias.add(categoria);
+		return this.categorias;
+	}
 
 	@Override
 	public int hashCode() {
